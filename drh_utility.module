@@ -1,0 +1,29 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Utility functions for the drh.dk site.
+ */
+
+/* --- HOOKS ---------------------------------------------------------------- */
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function drh_utility_form_alter(&$form, &$form_state, $form_id) {
+  if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] .'_node_form' == $form_id) {
+    if (isset($form['path_redirect'])) {
+      $form['path_redirect']['#attributes'] = array('class' => 'path-redirect');
+    }
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function drh_utility_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  if ('news' == $node->type && $op == 'view' && $node->build_mode == DRH_BUILD_TEASER_FRONT) {
+    unset($node->content['body']);
+  }
+}
